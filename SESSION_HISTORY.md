@@ -11,3 +11,4 @@ Newest first, 3 to 6 lines per session: what changed, decisions and why, gotchas
 - Gotcha: `ilspycmd` and `dotnet` are on the PowerShell PATH, not in Git Bash.
 - Gotcha: the first build did not load in game. NuGet's HarmonyX 2.16 needs `MonoMod.Backports`, which BepInEx 5.4.23.5 does not ship (it has Harmony 2.9). Fix: the csproj references `BepInEx\core\BepInEx.dll` and `0Harmony.dll` from the game folder. Error shows in Unity's `Player.log`, not in `LogOutput.log`.
 - BepInEx plugins never show in the game's Mods menu (Lua mods only).
+- Tim's first test: zooming while following works. Next: keep the chosen zoom instead of going back to the old one.

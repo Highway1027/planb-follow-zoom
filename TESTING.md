@@ -19,9 +19,6 @@ Before you start:
 A1. Select a train or truck, then click the follow button on its selection panel.
 -> The camera flies to the vehicle and zooms in close, as before.
 
-A2. Scroll the mouse wheel out a few notches, then back in.
--> The camera zooms out and in smoothly and keeps following the vehicle.
-
 A3. Press the zoom keys (the ones set under zoom in and zoom out in the game's controls).
 -> Same as A2: zoom changes, the follow goes on.
 
@@ -29,13 +26,16 @@ A4. Scroll all the way out, then keep scrolling.
 -> It stops at the whole-planet view without errors. Note if the follow looks odd there.
 
 A5. Hold the right mouse button.
--> The follow stops and the zoom goes back to what it was before A1 (vanilla behaviour).
+-> The follow stops. For now the zoom goes back to what it was before A1. That changes
+   in the next build (zoom stays where you put it).
 
 A6. Quit the game. Tell me when done: I read the log myself.
 -> (I check BepInEx\LogOutput.log for Follow Zoom errors.)
 
 ## Results so far
 
+- 11-11-2026: A2 passed: the wheel zooms in and out while following. Found: the zoom goes
+  back to the old level; it should stay where the player put it (STATUS Next 1).
 - 11-11-2026: first try failed: the plugin did not load (built against NuGet HarmonyX 2.16,
   needs MonoMod.Backports). Rebuilt against BepInEx's own Harmony 2.9: loads, patches apply.
 - 11-11-2026: project set up; 0.1.0 built and installed.
