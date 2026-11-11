@@ -10,7 +10,10 @@ No unit tests: the mod has no logic of its own apart from the game's camera code
 ## Sitting A: zoom while following a vehicle (about 5 min)
 
 Before you start:
-- Restart the game if it is running: Follow Zoom 0.1.0 loads on game start.
+- Already checked by me: the log shows "Follow Zoom 0.1.0 loaded" (fixed build, 11-11-2026).
+  If you restarted since, nothing changes: the fix is installed.
+- The mod does not show in the game's Mods menu: that list is for Lua mods only.
+  BepInEx plugins load before the menu and only show in BepInEx\LogOutput.log.
 - Load a save that has at least one train or truck line with a vehicle on it.
 
 A1. Select a train or truck, then click the follow button on its selection panel.
@@ -29,10 +32,12 @@ A5. Hold the right mouse button.
 -> The follow stops and the zoom goes back to what it was before A1 (vanilla behaviour).
 
 A6. Quit the game. Tell me when done: I read the log myself.
--> (I check BepInEx\LogOutput.log for "Follow Zoom 0.1.0 loaded" and no Follow Zoom errors.)
+-> (I check BepInEx\LogOutput.log for Follow Zoom errors.)
 
 ## Results so far
 
+- 11-11-2026: first try failed: the plugin did not load (built against NuGet HarmonyX 2.16,
+  needs MonoMod.Backports). Rebuilt against BepInEx's own Harmony 2.9: loads, patches apply.
 - 11-11-2026: project set up; 0.1.0 built and installed.
 
 ## How this file works

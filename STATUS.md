@@ -5,7 +5,7 @@ Last update: 11-11-2026
 ## Now
 
 - Version 0.1.0 built and installed in the game's `BepInEx\plugins\FollowZoom\` (11-11-2026). Two Harmony patches on `CinematicCameraFollow.Update` (see `docs/HOW_IT_WORKS.md`).
-- Not seen in game yet: TESTING Sitting A.
+- Loads in game and the patches apply (log checked 11-11-2026, after the Harmony fix). Zoom behaviour not seen yet: TESTING Sitting A.
 
 ## Next
 
