@@ -20,3 +20,5 @@ Last update: 11-11-2026
 ## Inbox
 
 (Follow Zoom ideas only; other mod ideas go to the Plan B Mod Kit Inbox.)
+
+- 11-11-2026: Settings menu (like Zomboid's mod options): a Lua Workshop layer where the player picks "keep zoom" or "go back to old zoom" after a follow. Could justify a Workshop release. First research: does the Lua API have mod settings (none found in `PlanB_api_doc.lua`, only the game's own `GOptions`), and how do other Plan B mods do settings and ship BepInEx.
