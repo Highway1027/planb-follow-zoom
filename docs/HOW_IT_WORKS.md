@@ -17,13 +17,26 @@ The follow button starts `SSceneSingleton<SSceneCinematic>.Inst.cameraFollow` (`
 
 A Lua mod could write `GCamera.zoomLevelTarget`, but the wheel still ends the follow (Lua cannot block that check) and the follow overwrites `zoomLog` every frame right before the camera update. So C# it is.
 
-## The two patches (`src/FollowZoom/Plugin.cs`)
+## The zoom patches (`src/FollowZoom/Plugin.cs`)
 
 Both only act during a "normal" follow: vehicles, drones and watched buildings. Animals, satellites, space lifts and rockets set their own zoom and stay vanilla.
 
 1. **Transpiler on `CinematicCameraFollow.Update`**: the one read of `Input.mouseScrollDelta` in the stop check is replaced by a call that returns zero during a normal follow. Right and middle mouse still stop the follow. If the game changes and the read is not found, a warning is logged and the wheel ends the follow as before.
 2. **Postfix on `CinematicCameraFollow.Update`**: after the game pins `zoomLog`, we overwrite it with our own value that moves towards `GCamera.zoomLogs[GCamera.zoomLevelTarget]`, with the same smoothing `SMouse` uses (`SMisc.SmoothDamp_realtime`, speed 4, fade 0.5). Because `Play()` sets the target to 1, a new follow still zooms in to level 1 first, as in vanilla.
 
-Ending the follow (right or middle mouse) still restores the zoom from before the follow (vanilla `Stop()`).
+The Update postfix also notes whether the player zoomed: `zoomLevelTarget` differs from the level `Play()` set.
+
+## Keeping the zoom (0.2.0, setting `KeepZoomAfterFollow`, default true)
+
+Vanilla `Stop()` sets `zoomLevelTarget` back to `_initialZoomLevel`, saved by `Play()`. Clicking follow again hops to the next vehicle by calling `Play()` again. That saves the player's zoom as "before the follow" and resets the zoom to level 1.
+
+3. **Prefix + postfix on `CinematicCameraFollow.Play`**: on a hop during a normal follow, put back the real `_initialZoomLevel` from before the first follow. If the player had zoomed, also put back their zoom level.
+4. **Prefix + postfix on `CinematicCameraFollow.Stop`**: if the player zoomed during a normal follow, put their zoom level back after vanilla `Stop()`. `SMouse` then holds the camera there. If they never zoomed, vanilla restores the old zoom.
+
+With the setting false, patches 3 and 4 do nothing (vanilla). The setting lives in `BepInEx\config\highway1027.planb.followzoom.cfg`, created on the first game start.
+
+## Possible settings layer (not built)
+
+The game's Lua engine makes every `[MoonSharpUserData]` class whose name starts with `G` or `S` a Lua global, in any loaded DLL (`SLua.GetLuaGlobals`). A static `GFollowZoom` class in this plugin would let a Lua mod set `GFollowZoom.keepZoomAfterFollow`. The plugin could also add its own `COptionBool` to `GOptions.listOptions[0]`, so the toggle shows in the game's Options menu. See the Plan B Mod Kit `API_NOTES.md`.
 
 Any exception turns the mod off and logs once; the game then behaves as vanilla.

@@ -7,33 +7,44 @@ No unit tests: the mod has no logic of its own apart from the game's camera code
 
 ---
 
-## Sitting A: zoom while following a vehicle (about 5 min)
+## Sitting B: zoom while following, tonight (about 10 min)
 
 Before you start:
-- Already checked by me: the log shows "Follow Zoom 0.1.0 loaded" (fixed build, 11-11-2026).
-  If you restarted since, nothing changes: the fix is installed.
-- The mod does not show in the game's Mods menu: that list is for Lua mods only.
-  BepInEx plugins load before the menu and only show in BepInEx\LogOutput.log.
-- Load a save that has at least one train or truck line with a vehicle on it.
+- Follow Zoom 0.2.0 is installed. To check: after starting the game, BepInEx\LogOutput.log
+  shows "Follow Zoom 0.2.0 loaded". I can read it for you.
+- Load a save with a train or truck line that has at least two vehicles on it.
 
-A1. Select a train or truck, then click the follow button on its selection panel.
+B1. Select a train or truck, then click the follow button on its selection panel.
 -> The camera flies to the vehicle and zooms in close, as before.
 
-A3. Press the zoom keys (the ones set under zoom in and zoom out in the game's controls).
--> Same as A2: zoom changes, the follow goes on.
+B2. Press the zoom keys (the ones set under zoom in and zoom out in the game's controls).
+-> The zoom changes and the follow goes on, same as the mouse wheel.
 
-A4. Scroll all the way out, then keep scrolling.
+B3. Scroll all the way out, then keep scrolling.
 -> It stops at the whole-planet view without errors. Note if the follow looks odd there.
 
-A5. Hold the right mouse button.
--> The follow stops. For now the zoom goes back to what it was before A1. That changes
-   in the next build (zoom stays where you put it).
+B4. Scroll back in to a middle zoom. Click the follow button again.
+-> The camera hops to the next vehicle on the line and keeps your middle zoom.
 
-A6. Quit the game. Tell me when done: I read the log myself.
+B5. Hold the right mouse button.
+-> The follow stops and the zoom stays where you put it. It does not jump back.
+
+B6. Select a vehicle and click follow, but do not zoom. Then hold the right mouse button.
+-> The follow stops and the zoom goes back to what it was before the follow (vanilla).
+
+B7. Quit the game. Open BepInEx\config\highway1027.planb.followzoom.cfg in Notepad.
+-> It has KeepZoomAfterFollow = true. Set it to false and save.
+
+B8. Start the game, follow a vehicle, zoom out a bit, then hold the right mouse button.
+-> The zoom goes back to the zoom from before the follow (the old behaviour).
+   Set KeepZoomAfterFollow back to true afterwards if you prefer that.
+
+B9. Quit the game. Tell me when done: I read the log myself.
 -> (I check BepInEx\LogOutput.log for Follow Zoom errors.)
 
 ## Results so far
 
+- 11-11-2026: Sitting A merged into Sitting B (rest of A plus the keep-zoom checks in 0.2.0).
 - 11-11-2026: A2 passed: the wheel zooms in and out while following. Found: the zoom goes
   back to the old level; it should stay where the player put it (STATUS Next 1).
 - 11-11-2026: first try failed: the plugin did not load (built against NuGet HarmonyX 2.16,

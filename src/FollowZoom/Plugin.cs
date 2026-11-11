@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
@@ -21,10 +22,13 @@ namespace FollowZoom
     {
         public const string PluginGuid = "highway1027.planb.followzoom";
         public const string PluginName = "Follow Zoom";
-        public const string PluginVersion = "0.1.0";
+        public const string PluginVersion = "0.2.0";
 
         internal static ManualLogSource Log;
         internal static bool Enabled = true;
+        // BepInEx\config\highway1027.planb.followzoom.cfg. A plain static setting, so a future
+        // Lua layer or Options menu entry can drive it the same way.
+        internal static ConfigEntry<bool> KeepZoomAfterFollow;
         private Harmony _harmony;
 
         private void Awake()
@@ -32,6 +36,10 @@ namespace FollowZoom
             Log = Logger;
             try
             {
+                KeepZoomAfterFollow = Config.Bind("General", "KeepZoomAfterFollow", true,
+                    "true: when a follow ends, or you hop to the next vehicle, the camera keeps the zoom " +
+                    "you picked during the follow. false: it goes back to the zoom from before the follow " +
+                    "(vanilla). Only applies once you zoomed during the follow.");
                 _harmony = new Harmony(PluginGuid);
                 _harmony.PatchAll();
                 Log.LogInfo($"{PluginName} {PluginVersion} loaded");
@@ -126,8 +134,13 @@ namespace FollowZoom
                 if (!__instance.IsPlaying() || !IsNormalFollow(__instance))
                 {
                     _lastT = -1f;
+                    FollowState.InNormalFollow = false;
                     return;
                 }
+                FollowState.InNormalFollow = true;
+                // The wheel and keys change zoomLevelTarget (via SMouse): that means the player zoomed.
+                if (GCamera.zoomLevelTarget != FollowState.TargetSetByGame)
+                    FollowState.PlayerZoomed = true;
                 // A new follow starts with t near 0: start from the zoom the game set this frame,
                 // which is still the zoom from before the follow.
                 if (_lastT < 0f || __instance.t < _lastT)
@@ -142,6 +155,107 @@ namespace FollowZoom
             {
                 Plugin.Disable(e);
             }
+        }
+    }
+
+    // What we know about the current follow, shared by the patches.
+    internal static class FollowState
+    {
+        // Set by the Update postfix: the current follow is a vehicle, drone or building follow.
+        internal static bool InNormalFollow;
+        // The player changed the zoom during this follow (see FollowUpdatePatch.Postfix).
+        internal static bool PlayerZoomed;
+        // The zoom level Play() set (1). Any other value during the follow came from the player.
+        internal static int TargetSetByGame = 1;
+
+        internal static bool KeepZoom => Plugin.Enabled && Plugin.KeepZoomAfterFollow.Value;
+    }
+
+    // Patch 3 (prefix + postfix on Play): clicking the follow button again while following hops to
+    // the next vehicle by calling Play() again. Vanilla then saves the current (player's) zoom as
+    // "the zoom from before the follow" and resets the zoom to level 1. With KeepZoomAfterFollow we
+    // keep the zoom the player picked and the real zoom from before the first follow.
+    [HarmonyPatch(typeof(CinematicCameraFollow), nameof(CinematicCameraFollow.Play))]
+    internal static class FollowPlayPatch
+    {
+        private static readonly AccessTools.FieldRef<CinematicCameraFollow, int> InitialZoomLevel =
+            AccessTools.FieldRefAccess<CinematicCameraFollow, int>("_initialZoomLevel");
+
+        private struct Hop
+        {
+            public bool IsHop;
+            public bool PlayerZoomed;
+            public int PlayerLevel;
+            public int InitialLevel;
+        }
+
+        private static void Prefix(CinematicCameraFollow __instance, out Hop __state)
+        {
+            __state = default;
+            if (!FollowState.KeepZoom) return;
+            try
+            {
+                if (__instance.IsPlaying() && FollowState.InNormalFollow)
+                {
+                    __state.IsHop = true;
+                    __state.PlayerZoomed = FollowState.PlayerZoomed;
+                    __state.PlayerLevel = GCamera.zoomLevelTarget;
+                    __state.InitialLevel = InitialZoomLevel(__instance);
+                }
+            }
+            catch (Exception e)
+            {
+                Plugin.Disable(e);
+            }
+        }
+
+        private static void Postfix(CinematicCameraFollow __instance, Hop __state)
+        {
+            try
+            {
+                if (__state.IsHop && Plugin.Enabled && FollowUpdatePatch.IsNormalFollow(__instance))
+                {
+                    // Always keep the zoom from before the first follow (vanilla would save level 1).
+                    InitialZoomLevel(__instance) = __state.InitialLevel;
+                    if (__state.PlayerZoomed)
+                    {
+                        GCamera.zoomLevelTarget = __state.PlayerLevel;
+                        FollowState.TargetSetByGame = __state.PlayerLevel;
+                        FollowState.PlayerZoomed = true;
+                        return;
+                    }
+                }
+                // A fresh follow: Play() just set the zoom target to 1.
+                FollowState.TargetSetByGame = GCamera.zoomLevelTarget;
+                FollowState.PlayerZoomed = false;
+            }
+            catch (Exception e)
+            {
+                Plugin.Disable(e);
+            }
+        }
+    }
+
+    // Patch 4 (prefix + postfix on Stop): vanilla Stop() puts back the zoom level from before the
+    // follow. With KeepZoomAfterFollow, and once the player zoomed during a normal follow, we put
+    // the player's zoom level back after Stop() ran. SMouse then keeps the camera at that level.
+    [HarmonyPatch(typeof(CinematicCameraFollow), nameof(CinematicCameraFollow.Stop))]
+    internal static class FollowStopPatch
+    {
+        private static void Prefix(out int __state)
+        {
+            __state = -1;
+            if (!FollowState.KeepZoom) return;
+            if (FollowState.InNormalFollow && FollowState.PlayerZoomed)
+                __state = GCamera.zoomLevelTarget;
+        }
+
+        private static void Postfix(int __state)
+        {
+            FollowState.InNormalFollow = false;
+            FollowState.PlayerZoomed = false;
+            if (__state >= 0 && Plugin.Enabled)
+                GCamera.zoomLevelTarget = __state;
         }
     }
 }
