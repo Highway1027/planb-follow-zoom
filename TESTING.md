@@ -7,7 +7,7 @@ No unit tests: the mod has no logic of its own apart from the game's camera code
 
 ---
 
-## Sitting B: zoom while following, tonight (about 10 min)
+## Sitting B: zoom while following, tonight (about 12 min)
 
 Before you start:
 - Follow Zoom 0.2.0 is installed. To check: after starting the game, BepInEx\LogOutput.log
@@ -32,15 +32,18 @@ B5. Hold the right mouse button.
 B6. Select a vehicle and click follow, but do not zoom. Then hold the right mouse button.
 -> The follow stops and the zoom goes back to what it was before the follow (vanilla).
 
-B7. Quit the game. Open BepInEx\config\highway1027.planb.followzoom.cfg in Notepad.
--> It has KeepZoomAfterFollow = true. Set it to false and save.
+B7. Press Escape, open Options, General tab. Scroll to the bottom.
+-> A checkbox "Keep zoom after follow (Follow Zoom)", ticked. Hovering it shows a tooltip.
+   Note if the label shows "< OPTION_... >" instead, or the row looks out of place.
 
-B8. Start the game, follow a vehicle, zoom out a bit, then hold the right mouse button.
+B8. Untick it and click Confirm. Follow a vehicle, zoom out a bit, hold the right mouse button.
 -> The zoom goes back to the zoom from before the follow (the old behaviour).
-   Set KeepZoomAfterFollow back to true afterwards if you prefer that.
 
-B9. Quit the game. Tell me when done: I read the log myself.
--> (I check BepInEx\LogOutput.log for Follow Zoom errors.)
+B9. Open Options again.
+-> The checkbox is still unticked. Tick it again and click Confirm.
+
+B10. Quit the game. Tell me when done: I read the log and the .cfg file myself.
+-> (I check BepInEx\LogOutput.log for errors and that the .cfg says KeepZoomAfterFollow = true.)
 
 ## Results so far
 

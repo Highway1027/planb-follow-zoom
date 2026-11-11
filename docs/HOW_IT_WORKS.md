@@ -35,8 +35,12 @@ Vanilla `Stop()` sets `zoomLevelTarget` back to `_initialZoomLevel`, saved by `P
 
 With the setting false, patches 3 and 4 do nothing (vanilla). The setting lives in `BepInEx\config\highway1027.planb.followzoom.cfg`, created on the first game start.
 
-## Possible settings layer (not built)
+## Options menu checkbox (`src/FollowZoom/OptionsMenu.cs`)
 
-The game's Lua engine makes every `[MoonSharpUserData]` class whose name starts with `G` or `S` a Lua global, in any loaded DLL (`SLua.GetLuaGlobals`). A static `GFollowZoom` class in this plugin would let a Lua mod set `GFollowZoom.keepZoomAfterFollow`. The plugin could also add its own `COptionBool` to `GOptions.listOptions[0]`, so the toggle shows in the game's Options menu. See the Plan B Mod Kit `API_NOTES.md`.
+5. **Prefix on the private `SSceneOptions.Refresh`**: the Options menu builds its rows fresh from `GOptions.listOptions[tab]` each time. Just before that, we add `KeepZoomOption` to the end of tab 0 (General) once. It is a game `COptionBool` that reads and saves the BepInEx config entry instead of PlayerPrefs, so the `.cfg` file stays the only place the setting lives. The game's Confirm, Cancel and Default buttons handle it like any other option. The game's text table has no label for it, so `InstantiateUI` sets the label and tooltip itself (English only). If adding it fails, it logs once and the checkbox is missing; the zoom patches keep working.
+
+## Possible Lua layer (not built)
+
+The game's Lua engine makes every `[MoonSharpUserData]` class whose name starts with `G` or `S` a Lua global, in any loaded DLL (`SLua.GetLuaGlobals`). A static `GFollowZoom` class in this plugin would let a Lua mod set `GFollowZoom.keepZoomAfterFollow`. See the Plan B Mod Kit `API_NOTES.md`.
 
 Any exception turns the mod off and logs once; the game then behaves as vanilla.
