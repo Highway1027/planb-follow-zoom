@@ -7,46 +7,12 @@ No unit tests: the mod has no logic of its own apart from the game's camera code
 
 ---
 
-## Sitting B: zoom while following, tonight (about 12 min)
-
-Before you start:
-- Follow Zoom 0.2.0 is installed. To check: after starting the game, BepInEx\LogOutput.log
-  shows "Follow Zoom 0.2.0 loaded". I can read it for you.
-- Load a save with a train or truck line that has at least two vehicles on it.
-
-B1. Select a train or truck, then click the follow button on its selection panel.
--> The camera flies to the vehicle and zooms in close, as before.
-
-B2. Press the zoom keys (the ones set under zoom in and zoom out in the game's controls).
--> The zoom changes and the follow goes on, same as the mouse wheel.
-
-B3. Scroll all the way out, then keep scrolling.
--> It stops at the whole-planet view without errors. Note if the follow looks odd there.
-
-B4. Scroll back in to a middle zoom. Click the follow button again.
--> The camera hops to the next vehicle on the line and keeps your middle zoom.
-
-B5. Hold the right mouse button.
--> The follow stops and the zoom stays where you put it. It does not jump back.
-
-B6. Select a vehicle and click follow, but do not zoom. Then hold the right mouse button.
--> The follow stops and the zoom goes back to what it was before the follow (vanilla).
-
-B7. Press Escape, open Options, General tab. Scroll to the bottom.
--> A checkbox "Keep zoom after follow (Follow Zoom)", ticked. Hovering it shows a tooltip.
-   Note if the label shows "< OPTION_... >" instead, or the row looks out of place.
-
-B8. Untick it and click Confirm. Follow a vehicle, zoom out a bit, hold the right mouse button.
--> The zoom goes back to the zoom from before the follow (the old behaviour).
-
-B9. Open Options again.
--> The checkbox is still unticked. Tick it again and click Confirm.
-
-B10. Quit the game. Tell me when done: I read the log and the .cfg file myself.
--> (I check BepInEx\LogOutput.log for errors and that the .cfg says KeepZoomAfterFollow = true.)
+No open sittings.
 
 ## Results so far
 
+- 13-11-2026: Sitting B passed (B1-B10): zoom keys, max zoom out, keep zoom on stop and
+  hop, vanilla zoom-back without zooming, Options checkbox on and off, setting saved.
 - 11-11-2026: Sitting A merged into Sitting B (rest of A plus the keep-zoom checks in 0.2.0).
 - 11-11-2026: A2 passed: the wheel zooms in and out while following. Found: the zoom goes
   back to the old level; it should stay where the player put it (STATUS Next 1).

@@ -2,6 +2,12 @@
 
 Newest first, 3 to 6 lines per session: what changed, decisions and why, gotchas, what was released. Keep about two months.
 
+## 13-11-2026: Sitting B passed, TESTING moved to docs
+
+- Tim ran Sitting B: everything passed. Log shows "Follow Zoom 0.2.0 loaded" with no errors; the .cfg keeps `KeepZoomAfterFollow = true`. 0.2.0 is release-ready.
+- `TESTING.md` moved to `docs/TESTING.md` (Tim's choice, matches his other repos); AGENTS and the wrap-up skill point there.
+- Still open: the release route decision.
+
 ## 11-11-2026: release research, 0.2.0 keeps the zoom
 
 - Research: Plan B C# mods ship as GitHub release zips with BepInEx config files; a Workshop (Lua) mod cannot load a DLL; no Valve rule found on link-only Workshop items. Decision (recommended, Tim to confirm): GitHub/Nexus release with a config file, no Lua layer for now.

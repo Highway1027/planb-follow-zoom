@@ -20,13 +20,13 @@ Related: `<drive>:\Game mods\Plan B Terraform\Plan B Mod Kit` holds the shared A
 | --- | --- |
 | Build | `dotnet build src/FollowZoom -c Release` (.NET SDK 10; on a C: PC add `-p:GameDir="..."`) |
 | Install locally | `powershell -File scripts/install.ps1` (builds, then copies the DLL to `<game folder>\BepInEx\plugins\FollowZoom\`; game must be closed) |
-| Test | No unit tests: the mod has no logic apart from the game's own camera code. In-game checks in `TESTING.md`. |
+| Test | No unit tests: the mod has no logic apart from the game's own camera code. In-game checks in `docs/TESTING.md`. |
 | Read game code | `ilspycmd -p -o decompiled "<game folder>\Plan B Terraform_Data\Managed\Assembly-CSharp.dll"` (`decompiled/` is git-ignored: never commit game code) |
 | BepInEx log | `<game folder>\BepInEx\LogOutput.log` (look for "Follow Zoom") |
 
 ## Rules
 
-- **Automated test first.** Any logic that does not need Unity goes in a plain C# class with unit tests. `TESTING.md` holds only what needs the game.
+- **Automated test first.** Any logic that does not need Unity goes in a plain C# class with unit tests. `docs/TESTING.md` holds only what needs the game.
 - **Never break a save.** The mod stores nothing; keep it that way unless there is a good reason.
 - **Patch little.** Prefer reading game state and calling the game's own methods over replacing them. Every patch gets a comment: what it changes and why.
 - **Guard everything.** A Follow Zoom error logs once and turns the mod off (the game then behaves as vanilla); it never crashes the game.
@@ -48,5 +48,5 @@ Work on `develop`. Merging to `main` or publishing to the Workshop is a release:
 | `STATUS.md` | Every session start |
 | `docs/HOW_IT_WORKS.md` | Before changing the patches |
 | `Plan B Mod Kit/docs/API_NOTES.md` | Before using a game class |
-| `TESTING.md` | Hand tests still open |
+| `docs/TESTING.md` | Hand tests still open |
 | `SESSION_HISTORY.md` | Troubleshooting, or what changed when |
