@@ -9,12 +9,12 @@ Last update: 13-11-2026
 
 ## Next
 
-1. Decide the release route. My recommendation: a GitHub release (Nexus optional) with install steps, announced in the Steam Workshop Discussions and General Discussions. No Workshop item or Lua layer for now: a Workshop item cannot install BepInEx or load a DLL, and a link-only item risks removal. The official Workshop has 22 items, all Lua. Same question for Rail Depot.
-2. After the decision: merge `develop` to `main` as 0.2.0 and publish (Tim's OK first).
+1. Release 0.2.0 on GitHub, waiting for Tim's OK. Prepared 13-11-2026: player README with install steps, `CHANGELOG.md`, `scripts/package.ps1` (zip checked: same code as the tested DLL). Steps on OK: merge `develop` to `main`, tag `v0.2.0`, make the repo public (it is private now), `gh release create` with the zip.
+2. Then Tim posts the announcement in the Steam Workshop Discussions and General Discussions (link to the release). Same route later for Rail Depot.
 
 ## Open
 
-- Release route decision (Next 1).
+- Tim's OK to release and make the repo public (Next 1).
 
 ## Inbox
 

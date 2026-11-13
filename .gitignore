@@ -6,3 +6,4 @@ decompiled/
 .claude/settings.local.json
 *.log
 .env
+dist/

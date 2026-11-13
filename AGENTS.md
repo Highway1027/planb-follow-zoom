@@ -20,6 +20,7 @@ Related: `<drive>:\Game mods\Plan B Terraform\Plan B Mod Kit` holds the shared A
 | --- | --- |
 | Build | `dotnet build src/FollowZoom -c Release` (.NET SDK 10; on a C: PC add `-p:GameDir="..."`) |
 | Install locally | `powershell -File scripts/install.ps1` (builds, then copies the DLL to `<game folder>\BepInEx\plugins\FollowZoom\`; game must be closed) |
+| Release zip | `powershell -File scripts/package.ps1` (builds, then makes `dist/FollowZoom-<version>.zip` with the `BepInEx/plugins/FollowZoom/` layout; version from `Plugin.cs`) |
 | Test | No unit tests: the mod has no logic apart from the game's own camera code. In-game checks in `docs/TESTING.md`. |
 | Read game code | `ilspycmd -p -o decompiled "<game folder>\Plan B Terraform_Data\Managed\Assembly-CSharp.dll"` (`decompiled/` is git-ignored: never commit game code) |
 | BepInEx log | `<game folder>\BepInEx\LogOutput.log` (look for "Follow Zoom") |
