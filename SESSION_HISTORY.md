@@ -2,6 +2,14 @@
 
 Newest first, 3 to 6 lines per session: what changed, decisions and why, gotchas, what was released. Keep about two months.
 
+## 16-11-2026: 0.2.0 released on GitHub
+
+- Prepared (13-11): player README, `CHANGELOG.md`, `scripts/package.ps1`. The packaged DLL decompiles to the same code as the tested one; only the commit hash in the version string differs.
+- Released: `main` fast-forwarded to caef522, tag `v0.2.0`, repo made public, GitHub release with `FollowZoom-0.2.0.zip`. Checked: the public download matches the local zip.
+- Gotcha: `Compress-Archive` in PowerShell 5.1 writes `\` in zip entry names; `package.ps1` uses .NET `ZipFile` instead.
+- Gotcha: the first `gh release create` right after making the repo public failed on the upload (HTTP 404) and left a draft. `gh release upload` plus `gh release edit --draft=false` fixed it.
+- No license yet (open in STATUS).
+
 ## 13-11-2026: Sitting B passed, TESTING moved to docs
 
 - Tim ran Sitting B: everything passed. Log shows "Follow Zoom 0.2.0 loaded" with no errors; the .cfg keeps `KeepZoomAfterFollow = true`. 0.2.0 is release-ready.
